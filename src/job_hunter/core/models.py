@@ -29,5 +29,5 @@ class JobPosting:
     tags: list[str] = field(default_factory=list)
     score: float = 0.0
     is_swe_relevant: bool = False
-    is_nyc: bool = False
+    is_nyc_relevant: bool = False
     metadata: dict[str, Any] = field(default_factory=dict)

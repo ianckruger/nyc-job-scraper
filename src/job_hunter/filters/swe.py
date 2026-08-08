@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 SWE_KEYWORDS = {
     "software engineer",
     "software developer",
@@ -22,13 +24,20 @@ EXCLUDE_KEYWORDS = {
     "marketing",
     "customer success",
     "hr",
-    # "operations",
     "finance",
     "legal",
 }
 
+
 def is_swe_role(title: str, description: str = "") -> bool:
+    return swe_score(title, description) >= 5.0
+
+
+def swe_score(title: str, description: str = "") -> float:
     text = f"{title} {description}".lower()
     if any(word in text for word in EXCLUDE_KEYWORDS):
-        return False
-    return any(word in text for word in SWE_KEYWORDS)
+        return 0.0
+    matches = sum(1 for word in SWE_KEYWORDS if word in text)
+    if matches == 0:
+        return 0.0
+    return 5.0 + min(matches, 3)
