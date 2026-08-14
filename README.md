@@ -1,5 +1,7 @@
 # nyc-job-scraper
 
+click here to jump to the running portion [How To Run](#to-run)
+
 src/job hunter/sources provides adapters for each job source, which keeps them isolated from one another
 pipeline/ turns raw postings into comparable job objects after cleaning up the data. 
     flow: discover ==> fetch ==> parse ==> normalize ==> dedupe ==> enrich ==> rank
@@ -55,3 +57,36 @@ The DB works by getting the source adapter, taking the created job posting objec
 
 prevents scraping code from building sql strings directly, rather it creates instances of the job object and passes it to repo
 
+# to run
+1. Create a virtual environment
+    >py -3.13 -m venv .venv
+    >.\.venv\Scripts\Activate.ps1
+2. Ensure pip is upgraded and all environmental variables and packages are set
+    >python -m pip install --upgrade pip
+    >python -m pip install -e ".[dev]"
+    >$env:SWE_ONLY = "false"
+    >$env:NYC_ONLY = "false"
+Note: Does not have to be false, nor strictly these two variables
+3. run the script
+    >python -m job_hunter run --source greenhouse
+Use the --source tag to parse a specific job board. Here im using my greenhouse tag
+4. parse the data
+    >python -m job_hunter stats
+    >python -m job_hunter list --limit 20
+    >python -m job_hunter export --output data/exports/jobs.csv
+The stats call should return something similar to the following Dashboard
+>Dashboard
+>total_jobs: 1692
+>swe_jobs: 11
+>nyc_jobs: 493
+>top_companies:
+>  - Stripe: 565
+>  - Datadog: 432
+>  - MongoDB: 411
+>  - Figma: 160
+>  - Robinhood: 124
+
+Below is a screenshot of the limited list:
+![alt text](image.png)
+
+This WILL run slow since the payloads include indiviual job details after listing each board. 
