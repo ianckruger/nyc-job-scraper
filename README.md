@@ -90,3 +90,20 @@ Below is a screenshot of the limited list:
 ![alt text](image.png)
 
 This WILL run slow since the payloads include indiviual job details after listing each board. 
+
+
+# Update 1:
+Normalizing location-first job searching
+Before this, the workflow worked as such:
+greenhouse.py will extract the location.name information, as well as description information
+--> normalize.py will trim and normalize the text --> erich.py will call is_nyc_job on job location and description
+--> nyc.py contains the actual rule of 
+> text = f"{location or ''} {description}".lower()
+
+This will search the combined text for nyc, new york, manhattan, brooklyn, etc --> enrich.py will remove those whos variable "is_nyc_relevant" = false
+
+Lets change it to be location first, and potentially only search descriptions if a location is absent and or listed as remote.
+
+Added tests as well; Run the following commands in your virtual enviornment
+> python -m pip install -e ".[dev]"
+> python -m pytest tests/unit/test_nyc_filter.py -q

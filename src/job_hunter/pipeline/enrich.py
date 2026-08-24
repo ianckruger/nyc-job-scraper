@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from job_hunter.config.settings import Settings
 from job_hunter.core.models import JobPosting
-from job_hunter.filters.nyc import is_nyc_job, nyc_score
+from job_hunter.filters.nyc import is_nyc_job, nyc_score, mentions_nyc
 from job_hunter.filters.remote import remote_score
 from job_hunter.filters.seniority import infer_seniority, seniority_score
 from job_hunter.filters.swe import is_swe_role, swe_score
@@ -11,7 +11,10 @@ from job_hunter.taxonomy.skills import extract_skills
 
 def enrich_job(job: JobPosting, settings: Settings) -> JobPosting:
     job.is_swe_relevant = is_swe_role(job.title, job.description)
-    job.is_nyc_relevant = is_nyc_job(job.location, job.description)
+    # job.is_nyc_relevant = is_nyc_job(job.location, job.description)
+    job.is_nyc_relevant = is_nyc_job(job.location)
+    job.metadata["mentions_nyc"] = mentions_nyc(job.description)
+
 
     if not job.seniority:
         job.seniority = infer_seniority(job.title)
@@ -23,7 +26,8 @@ def enrich_job(job: JobPosting, settings: Settings) -> JobPosting:
 
     score = 0.0
     score += swe_score(job.title, job.description)
-    score += nyc_score(job.location, job.description)
+    # score += nyc_score(job.location, job.description)
+    score += nyc_score(job.location)
     score += remote_score(job.remote_policy, job.location, job.description)
     score += seniority_score(job.seniority)
     score += min(len(skills) * 0.5, 5.0)
