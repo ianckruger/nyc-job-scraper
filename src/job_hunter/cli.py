@@ -87,22 +87,35 @@ def run(
     table.add_column("Source")
     table.add_column("Discovered", justify="right")
     table.add_column("Parsed", justify="right")
+    table.add_column("Dedupe", justify="right")
+    table.add_column("SWE", justify="right")
+    table.add_column("NYC", justify="right")
+    table.add_column("Both", justify="right")
     table.add_column("Saved", justify="right")
     table.add_column("Filtered Out", justify="right")
+    table.add_column("Fetch", justify="right")
+    table.add_column("Total", justify="right")
 
     for result in summary.results:
         table.add_row(
             result.source_name,
             str(result.discovered),
             str(result.parsed),
+            str(result.deduped),
+            str(result.filter_metrics.swe_matches),
+            str(result.filter_metrics.nyc_matches),
+            str(result.filter_metrics.both_matches),
             str(result.saved),
             str(result.filtered_out),
+            f"{result.fetch_seconds:.1f}s",
+            f"{result.total_seconds:.1f}s",
         )
         record_source_run(
             repo,
             result.source_name,
             jobs_found=result.parsed,
             jobs_saved=result.saved,
+            metrics=result.metrics_dict(),
         )
 
     print(table)

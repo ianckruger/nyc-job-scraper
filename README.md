@@ -72,8 +72,11 @@ Note: Does not have to be false, nor strictly these two variables
 Use the --source tag to parse a specific job board. Here im using my greenhouse tag
 4. parse the data
     >python -m job_hunter stats
+
     >python -m job_hunter list --limit 20
+
     >python -m job_hunter export --output data/exports/jobs.csv
+
 The stats call should return something similar to the following Dashboard
 >Dashboard
 >total_jobs: 1692
@@ -107,3 +110,17 @@ Lets change it to be location first, and potentially only search descriptions if
 Added tests as well; Run the following commands in your virtual enviornment
 > python -m pip install -e ".[dev]"
 > python -m pytest tests/unit/test_nyc_filter.py -q
+
+# Update 2: Metrics for parsed jobs + timing instrumentation
+I wanted to add these metrics so I can track whats being filtered out vs kept in, and why. It's important to ensure that no jobs are being incorrectly cut or incorrectly kept in. 
+
+Theres also metrics for timing, simply because some processes take too long and I wanted to see where the bottleneck is (probably just numbers). Next update will focus on titlebase screening to quickly identify and eliminate positions that dont have an obvious software name. This should save time from parsing every description and simply eliminating anything with a "marketing" title but no "engineer" title. It will, of course, check to make sure the job isnt "marketing engineer" before eliminating.
+
+Key changes are in enrich, runner, cli, and db. You can directly view the metrics test in the [Test Filter Metrics file](tests/unit/test_filter_metrics.py).
+
+You can view stored metrics in [Source_runs.metrics_json](data/job_hunter.db) inside of the job hunter db.
+
+A table similar to the following should appear:
+![alt text](image-1.png)
+
+Showing how 11 Jobs were marked as SWE, 120 as NYC, but none of them overlapped, so nothing was saved. Observing the data, I can tell that the SWE marker is incorrect, so the next update will focus on that. 

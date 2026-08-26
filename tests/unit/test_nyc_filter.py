@@ -42,7 +42,7 @@ def test_enrichment_does_not_use_description_as_nyc_location_evidence() -> None:
         description="Our company has a large New York office.",
     )
 
-    enrich_job(job, Settings())
+    enrich_job(job, Settings.model_construct())
 
     assert job.is_nyc_relevant is False
     assert job.metadata["mentions_nyc"] is True

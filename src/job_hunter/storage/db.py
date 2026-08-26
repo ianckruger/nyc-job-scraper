@@ -17,7 +17,8 @@ CREATE TABLE IF NOT EXISTS source_runs (
     status TEXT NOT NULL DEFAULT 'running',
     jobs_found INTEGER NOT NULL DEFAULT 0,
     jobs_saved INTEGER NOT NULL DEFAULT 0,
-    error_message TEXT
+    error_message TEXT,
+    metrics_json TEXT
 );
 
 CREATE TABLE IF NOT EXISTS jobs (
@@ -91,6 +92,11 @@ def connect(db_path: Path | str = DB_PATH) -> sqlite3.Connection:
 
 def init_db(conn: sqlite3.Connection) -> None:
     conn.executescript(SCHEMA_SQL)
+    columns = {
+        row["name"] for row in conn.execute("PRAGMA table_info(source_runs)").fetchall()
+    }
+    if "metrics_json" not in columns:
+        conn.execute("ALTER TABLE source_runs ADD COLUMN metrics_json TEXT")
     conn.commit()
 
 def rows_to_dicts(rows: Iterable[sqlite3.Row]) -> list[dict[str, Any]]:
