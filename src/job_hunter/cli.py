@@ -91,7 +91,6 @@ def run(
     table.add_column("SWE", justify="right")
     table.add_column("NYC", justify="right")
     table.add_column("Both", justify="right")
-    table.add_column("Saved", justify="right")
     table.add_column("Filtered Out", justify="right")
     table.add_column("Fetch", justify="right")
     table.add_column("Total", justify="right")
