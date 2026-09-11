@@ -7,7 +7,6 @@ SWE_TITLE_KEYWORDS = frozenset(
     {
         "software engineer",
         "software developer",
-        "software engineering intern",
         "backend engineer",
         "backend developer",
         "api engineer",
@@ -67,6 +66,7 @@ TITLE_EXCLUSION_KEYWORDS = frozenset(
         "technical program manager",
         "product manager",
         "customer success",
+        "intern",
     }
 )
 
