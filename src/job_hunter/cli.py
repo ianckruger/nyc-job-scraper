@@ -14,6 +14,7 @@ from job_hunter.pipeline.runner import record_source_run, run_pipeline
 from job_hunter.services.dashboard import dashboard_summary
 from job_hunter.services.audit import export_filter_audit
 from job_hunter.services.export import export_csv, export_json
+from job_hunter.services.report import generate_markdown_report
 from job_hunter.services.search import search_jobs
 from job_hunter.sources import build_sources
 from job_hunter.storage.db import connect, init_db
@@ -223,3 +224,23 @@ def export(
         )
 
     print(f"[green]Exported {count} jobs[/green] to {output}")
+
+
+@app.command()
+def report(
+    input_path: Path = typer.Argument(..., help="Saved job CSV to render."),
+    output: Path = typer.Option(
+        Path("data/reports/job_shortlist.md"),
+        "--output",
+        "-o",
+        help="Markdown report path.",
+    ),
+    title: str = typer.Option("NYC SWE Job Shortlist", "--title"),
+) -> None:
+    """Turn a saved job CSV into a readable Markdown shortlist."""
+    if not input_path.is_file():
+        print(f"[red]CSV file not found:[/red] {input_path}")
+        raise typer.Exit(code=1)
+
+    count = generate_markdown_report(input_path, output, title=title)
+    print(f"[green]Rendered {count} jobs[/green] to {output}")

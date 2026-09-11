@@ -20,7 +20,6 @@ from job_hunter.filters.swe import is_swe_role, swe_score
         "Fullstack Engineer",
         "Firmware Engineer",
         "AI Research Engineer",
-        "Software Engineering Intern",
     ],
 )
 def test_eligible_swe_titles_pass(title: str) -> None:

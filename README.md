@@ -202,3 +202,20 @@ to <br>
 in [Greenhouse.py](src/job_hunter/sources/greenhouse.py). Disable the name check in swe filter, and it should return a thorough check. 
 
 I used Codex to sift through the audit reports and find names that were being filtered out, even if they were located in NYC, that should obviously be included. I wrote the variables into the filter storage.
+
+
+## Readable Markdown files
+
+Run the command 
+
+>python -m job_hunter report data/exports/your_jobs.csv --output data/reports/your_shortlist.md
+
+to get the output of the saved jobs as a markdown file.
+
+Or simply, follow the following pipeline:
+
+Get the jobs --> export data --> turn to markdown
+
+>python -m job_hunter run --source greenhouse <br>
+>python -m job_hunter export --output data/exports/jobs.csv <br>
+>python -m job_hunter report data/exports/jobs.csv --output data/reports/greenhouse_shortlist.md
