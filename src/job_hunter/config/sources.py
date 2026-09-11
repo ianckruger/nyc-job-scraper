@@ -1,16 +1,38 @@
 from __future__ import annotations
+
 from pathlib import Path
 from typing import Any
+
 import yaml
-from job_hunter.config.settings import get_settings
-DEFAULT_SOURCES_PATH = Path(__file__).resolve().parent / "sources.yaml"
-def load_sources_config(path: Path | None = None) -> dict[str, list[dict[str, Any]]]:
-    config_path = path or DEFAULT_SOURCES_PATH
-    if not config_path.exists():
-        return {}
-    with config_path.open("r", encoding="utf-8") as handle:
+
+
+DEFAULT_COMPANIES_PATH = Path(__file__).resolve().parent / "companies.yaml"
+
+
+def load_company_registry(path: Path | None = None) -> list[dict[str, Any]]:
+    """Load the company-first registry of public ATS boards."""
+    registry_path = path or DEFAULT_COMPANIES_PATH
+    if not registry_path.exists():
+        return []
+
+    with registry_path.open("r", encoding="utf-8") as handle:
         data = yaml.safe_load(handle) or {}
-    return {key: value or [] for key, value in data.items()}
+
+    companies = data.get("companies", [])
+    if not isinstance(companies, list):
+        raise ValueError("Company registry must contain a 'companies' list.")
+    return [entry for entry in companies if isinstance(entry, dict) and entry.get("enabled", True)]
+
+
+def load_sources_config(path: Path | None = None) -> dict[str, list[dict[str, Any]]]:
+    """Group company registry entries by ATS provider for source construction."""
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for entry in load_company_registry(path):
+        provider = entry.get("provider")
+        if isinstance(provider, str) and provider:
+            grouped.setdefault(provider, []).append(entry)
+    return grouped
+
+
 def get_source_entries(source_name: str, path: Path | None = None) -> list[dict[str, Any]]:
-    config = load_sources_config(path)
-    return config.get(source_name, [])
+    return load_sources_config(path).get(source_name, [])

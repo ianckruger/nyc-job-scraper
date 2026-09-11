@@ -1,0 +1,20 @@
+# Company-first registry. Each token identifies a public ATS board, not a secret.
+companies:
+  - {company: Airbnb, provider: greenhouse, token: airbnb}
+  - {company: Asana, provider: greenhouse, token: asana}
+  - {company: Cloudflare, provider: greenhouse, token: cloudflare}
+  - {company: Coinbase, provider: greenhouse, token: coinbase}
+  - {company: Databricks, provider: greenhouse, token: databricks}
+  - {company: Datadog, provider: greenhouse, token: datadog}
+  - {company: Figma, provider: greenhouse, token: figma}
+  - {company: Instacart, provider: greenhouse, token: instacart}
+  - {company: Lyft, provider: greenhouse, token: lyft}
+  - {company: MongoDB, provider: greenhouse, token: mongodb}
+  - {company: Okta, provider: greenhouse, token: okta}
+  - {company: Pinterest, provider: greenhouse, token: pinterest}
+  - {company: Reddit, provider: greenhouse, token: reddit}
+  - {company: Robinhood, provider: greenhouse, token: robinhood}
+  - {company: Stripe, provider: greenhouse, token: stripe}
+  - {company: Twilio, provider: greenhouse, token: twilio}
+  - {company: Netflix, provider: lever, token: netflix}
+  - {company: Palantir, provider: lever, token: palantir}

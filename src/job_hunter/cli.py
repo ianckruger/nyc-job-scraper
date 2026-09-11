@@ -91,7 +91,7 @@ def run(
 
     adapters = build_sources(selected_sources)
     if not adapters:
-        print("[red]No source adapters configured. Check config/sources.yaml.[/red]")
+        print("[red]No source adapters configured. Check config/companies.yaml.[/red]")
         raise typer.Exit(code=1)
 
     collect_audit = audit or audit_output is not None

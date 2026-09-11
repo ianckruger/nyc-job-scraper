@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     data_dir: Path = Path("data")
     db_path: Path = Path("data/job_hunter.db")
 
-    default_sources: str = "greenhouse,lever,ashby,workday"
+    default_sources: str = "greenhouse,lever"
     swe_only: bool = True
     nyc_only: bool = True
 

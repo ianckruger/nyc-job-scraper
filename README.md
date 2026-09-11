@@ -47,6 +47,13 @@ Every source should answer some basic questions:
     - how do i parse it into the above mentioned object
 [The Base Page](src/job_hunter/sources/base.py) answers this
 
+## Company registry
+
+Companies are configured in [companies.yaml](src/job_hunter/config/companies.yaml). Each entry
+contains a company name, its ATS provider, and the provider's public board token. Add a company
+only after confirming its board token works. The current registry has Greenhouse and Lever entries;
+the other provider adapters are planned but not yet implemented.
+
 filtering modules can be found in the filtering folder, seperate from source. give ways to add to score instead of completely remove in a binary
 [SWE Filters](src/job_hunter/filters/swe.py)
 [NYC Filters](src/job_hunter/filters/nyc.py)
