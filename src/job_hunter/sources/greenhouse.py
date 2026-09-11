@@ -25,7 +25,7 @@ class GreenhouseSource(APISource):
         board_token: str,
         company: str,
         http: Optional[HttpClient] = None,
-        fetch_details: bool = True,
+        fetch_details: bool = False,
         enabled: bool = True,
     ) -> None:
         super().__init__(enabled=enabled)

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
@@ -11,6 +12,7 @@ from job_hunter.config.logging import configure_logging, get_logger
 from job_hunter.config.settings import get_settings
 from job_hunter.pipeline.runner import record_source_run, run_pipeline
 from job_hunter.services.dashboard import dashboard_summary
+from job_hunter.services.audit import export_filter_audit
 from job_hunter.services.export import export_csv, export_json
 from job_hunter.services.search import search_jobs
 from job_hunter.sources import build_sources
@@ -60,7 +62,17 @@ def run(
         [],
         "--source",
         "-s",
-        help="Source to run. Repeat the flag to run multiple sources.",
+        help="Source adapter or configured company/token (for example: greenhouse or datadog).",
+    ),
+    audit: bool = typer.Option(
+        False,
+        "--audit",
+        help="Write rejected jobs and reasons to a CSV audit report.",
+    ),
+    audit_output: Optional[Path] = typer.Option(
+        None,
+        "--audit-output",
+        help="Path for the audit CSV; implies --audit.",
     ),
 ) -> None:
     """
@@ -81,7 +93,8 @@ def run(
         print("[red]No source adapters configured. Check config/sources.yaml.[/red]")
         raise typer.Exit(code=1)
 
-    summary = run_pipeline(adapters, repo, settings)
+    collect_audit = audit or audit_output is not None
+    summary = run_pipeline(adapters, repo, settings, collect_audit=collect_audit)
 
     table = Table(title="Pipeline Results")
     table.add_column("Source")
@@ -104,7 +117,6 @@ def run(
             str(result.filter_metrics.swe_matches),
             str(result.filter_metrics.nyc_matches),
             str(result.filter_metrics.both_matches),
-            str(result.saved),
             str(result.filtered_out),
             f"{result.fetch_seconds:.1f}s",
             f"{result.total_seconds:.1f}s",
@@ -119,6 +131,16 @@ def run(
 
     print(table)
     print(f"[green]Saved {summary.total_saved} jobs[/green] to {settings.db_path}")
+
+    if collect_audit:
+        default_audit_path = (
+            settings.data_dir
+            / "audits"
+            / f"filter_audit_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+        )
+        output_path = audit_output or default_audit_path
+        count = export_filter_audit(summary.audit_records, output_path)
+        print(f"[yellow]Wrote {count} rejected jobs[/yellow] to {output_path}")
 
 
 @app.command("list")

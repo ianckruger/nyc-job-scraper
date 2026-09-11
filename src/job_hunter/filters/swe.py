@@ -7,8 +7,10 @@ SWE_TITLE_KEYWORDS = frozenset(
     {
         "software engineer",
         "software developer",
+        "software engineering intern",
         "backend engineer",
         "backend developer",
+        "api engineer",
         "frontend engineer",
         "frontend developer",
         "front-end engineer",
@@ -19,19 +21,30 @@ SWE_TITLE_KEYWORDS = frozenset(
         "full-stack developer",
         "mobile engineer",
         "mobile developer",
+        "web engineer",
+        "web developer",
         "ios engineer",
         "ios developer",
         "android engineer",
         "android developer",
+        "android bsp engineer",
         "platform engineer",
         "platform developer",
         "product engineer",
         "data engineer",
         "machine learning engineer",
+        "ai engineer",
+        "research engineer",
         "computer vision engineer",
+        "security engineer",
+        "infrastructure engineer",
+        "integration engineer",
+        "reliability engineer",
+        "firmware engineer",
         "site reliability engineer",
         "devops engineer",
         "devops developer",
+        "fullstack engineer",
         "sre",
     }
 )
@@ -87,6 +100,26 @@ def swe_title_check(title: str) -> bool:
         return False
 
     return any(_contains_phrase(normalized_title, phrase) for phrase in SWE_TITLE_KEYWORDS)
+
+
+def swe_rejection_reason(title: str) -> str:
+    """Explain why a title did not qualify for the SWE filter."""
+    normalized_title = title.casefold().strip()
+    if not normalized_title:
+        return "missing title"
+
+    excluded_phrase = next(
+        (
+            phrase
+            for phrase in TITLE_EXCLUSION_KEYWORDS
+            if _contains_phrase(normalized_title, phrase)
+        ),
+        None,
+    )
+    if excluded_phrase:
+        return f"title contains excluded phrase: {excluded_phrase}"
+
+    return "title has no SWE keyword"
 
 
 def is_swe_role(title: str, description: str = "") -> bool:

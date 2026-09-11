@@ -9,7 +9,11 @@ from job_hunter.config.settings import Settings
 from job_hunter.core.models import JobPosting
 from job_hunter.pipeline.dedupe import dedupe_jobs
 from job_hunter.pipeline.discover import discover_jobs, fetch_raw, parse_jobs
-from job_hunter.pipeline.enrich import FilterMetrics, enrich_and_filter_jobs
+from job_hunter.pipeline.enrich import (
+    FilterAuditRecord,
+    FilterMetrics,
+    enrich_filter_and_audit_jobs,
+)
 from job_hunter.pipeline.normalize import normalize_jobs
 from job_hunter.pipeline.rank import rank_jobs
 from job_hunter.sources.base import BaseJobSource
@@ -34,6 +38,7 @@ class PipelineResult:
     enrich_filter_seconds: float
     store_seconds: float
     total_seconds: float
+    audit_records: list[FilterAuditRecord]
 
     def metrics_dict(self) -> dict[str, Any]:
         return {
@@ -58,12 +63,15 @@ class PipelineResult:
 class RunSummary:
     results: list[PipelineResult]
     total_saved: int
+    audit_records: list[FilterAuditRecord]
 
 
 def run_source_pipeline(
     source: BaseJobSource,
     repo: JobsRepository,
     settings: Settings,
+    *,
+    collect_audit: bool = False,
 ) -> PipelineResult:
     total_started = perf_counter()
     source_label = f"{source.name}:{getattr(source, 'company', source.name)}"
@@ -84,7 +92,11 @@ def run_source_pipeline(
     normalize_dedupe_seconds = perf_counter() - normalize_dedupe_started
 
     enrich_filter_started = perf_counter()
-    enriched, filter_metrics = enrich_and_filter_jobs(deduped, settings)
+    enriched, filter_metrics, audit_records = enrich_filter_and_audit_jobs(
+        deduped,
+        settings,
+        collect_audit=collect_audit,
+    )
     ranked = rank_jobs(enriched)
     enrich_filter_seconds = perf_counter() - enrich_filter_started
 
@@ -110,6 +122,7 @@ def run_source_pipeline(
         enrich_filter_seconds=enrich_filter_seconds,
         store_seconds=store_seconds,
         total_seconds=perf_counter() - total_started,
+        audit_records=audit_records,
     )
 
 
@@ -117,15 +130,19 @@ def run_pipeline(
     sources: list[BaseJobSource],
     repo: JobsRepository,
     settings: Settings,
+    *,
+    collect_audit: bool = False,
 ) -> RunSummary:
     results: list[PipelineResult] = []
     total_saved = 0
+    audit_records: list[FilterAuditRecord] = []
 
     for source in sources:
         try:
-            result = run_source_pipeline(source, repo, settings)
+            result = run_source_pipeline(source, repo, settings, collect_audit=collect_audit)
             results.append(result)
             total_saved += result.saved
+            audit_records.extend(result.audit_records)
         except Exception as exc:
             logger.exception("Pipeline failed for source %s: %s", source.name, exc)
             results.append(
@@ -143,6 +160,7 @@ def run_pipeline(
                     enrich_filter_seconds=0.0,
                     store_seconds=0.0,
                     total_seconds=0.0,
+                    audit_records=[],
                 )
             )
         finally:
@@ -150,7 +168,11 @@ def run_pipeline(
             if callable(close):
                 close()
 
-    return RunSummary(results=results, total_saved=total_saved)
+    return RunSummary(
+        results=results,
+        total_saved=total_saved,
+        audit_records=audit_records,
+    )
 
 
 def record_source_run(

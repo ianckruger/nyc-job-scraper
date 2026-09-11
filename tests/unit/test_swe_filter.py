@@ -13,6 +13,14 @@ from job_hunter.filters.swe import is_swe_role, swe_score
         "Mobile Developer",
         "Site Reliability Engineer",
         "SRE",
+        "Web Engineer",
+        "Web Developer",
+        "Backend/API Engineer",
+        "Security Engineer 2 - Cyber Threat Intelligence",
+        "Fullstack Engineer",
+        "Firmware Engineer",
+        "AI Research Engineer",
+        "Software Engineering Intern",
     ],
 )
 def test_eligible_swe_titles_pass(title: str) -> None:

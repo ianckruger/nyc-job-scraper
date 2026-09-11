@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Any
 
 from job_hunter.config.logging import get_logger
-from job_hunter.config.sources import get_source_entries
+from job_hunter.config.sources import load_sources_config
 from job_hunter.sources.base import BaseJobSource
 from job_hunter.sources.greenhouse import GreenhouseSource
 from job_hunter.sources.lever import LeverSource
@@ -21,17 +21,42 @@ def build_sources(
     adapters: list[BaseJobSource] = []
 
     for source_name in source_names:
-        entries = get_source_entries(source_name)
-        if not entries:
-            logger.warning("No configured entries for source: %s", source_name)
+        configured_entries = _resolve_configured_entries(source_name)
+        if not configured_entries:
+            logger.warning("No configured source or company matches: %s", source_name)
             continue
 
-        for entry in entries:
-            adapter = _build_adapter(source_name, entry, shared_http)
+        for adapter_name, entry in configured_entries:
+            adapter = _build_adapter(adapter_name, entry, shared_http)
             if adapter is not None:
                 adapters.append(adapter)
 
     return adapters
+
+
+def _resolve_configured_entries(source_name: str) -> list[tuple[str, dict[str, Any]]]:
+    """Resolve an adapter name or a configured company/token alias."""
+    config = load_sources_config()
+    if source_name in config:
+        return [(source_name, entry) for entry in config[source_name]]
+
+    requested_name = source_name.casefold()
+    matches: list[tuple[str, dict[str, Any]]] = []
+    for adapter_name, entries in config.items():
+        for entry in entries:
+            aliases = (
+                entry.get("token"),
+                entry.get("board_token"),
+                entry.get("company_token"),
+                entry.get("company"),
+                entry.get("name"),
+            )
+            if any(
+                isinstance(alias, str) and alias.casefold() == requested_name
+                for alias in aliases
+            ):
+                matches.append((adapter_name, entry))
+    return matches
 
 
 def _build_adapter(

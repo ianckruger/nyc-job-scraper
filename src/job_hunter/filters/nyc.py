@@ -30,6 +30,13 @@ def normalize_location(location: str | None) -> str:
 def is_nyc_job(location:str | None) -> bool:
     return bool(NYC_LOCATION_PATTERN.search(normalize_location(location)))
 
+
+def nyc_rejection_reason(location: str | None) -> str:
+    """Explain why a location did not qualify for the NYC filter."""
+    if not normalize_location(location):
+        return "missing location"
+    return "location has no NYC signal"
+
 def nyc_score(location: str | None) -> float:
     return 3.0 if is_nyc_job(location) else 0.0
 

@@ -167,3 +167,38 @@ Make sure to clear the terminaly only overrides so it returns to defaults after 
 
 Notes from this run:
 Datadog is returning 0 SWE jobs. If you know Datadog, you know this isnt right. I'll reiterate through and see what the job titles include in the header, and overlay it with my filters to see what needs to be adapted.
+
+
+
+# 9/10
+
+### Filter/audit report
+I dont know why datadog is not showing any jobs, so Im going to create an audit output to record the rejected titles + location (if NYC is enabled) and the job url so I can exam the job description/listing itself.
+
+Could potentially add a variable that signifies WHEN a job was cut off, and paste it into the report.
+
+Two new flags:
+    --audit
+    --audit-output
+
+Output will be stored in a csv file in a data/audits, specify with path in data after --audit-output
+
+>python -m job_hunter run --source greenhouse 
+>--audit-output data/audits/greenhouse_audit.csv
+
+Using this, we're going to run a datadog audit
+
+>python -m job_hunter run --source datadog --audit-output data/audits/datadog_audit.csv
+
+You can also use other companies like Figma, Strip, MongoDB by specifiying after --source
+
+I cross referenced the audit with greenhouse and saw some failing filters cause of words like "developer" or "web engineer" not specifically referencing software in the title. I figured its better for me to look through the job applications myself and decide which to keep and not to keep.
+
+For the future, if you want a more thorough detailed filter, turn on 
+> fetch_details: bool = False, <br>
+to <br>
+>fetch_details: bool = True,
+
+in [Greenhouse.py](src/job_hunter/sources/greenhouse.py). Disable the name check in swe filter, and it should return a thorough check. 
+
+I used Codex to sift through the audit reports and find names that were being filtered out, even if they were located in NYC, that should obviously be included. I wrote the variables into the filter storage.
