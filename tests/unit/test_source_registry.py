@@ -29,3 +29,23 @@ def test_company_registry_groups_entries_by_provider() -> None:
     assert any(entry["company"] == "Datadog" for entry in registry)
     assert any(entry["company"] == "Datadog" for entry in sources["greenhouse"])
     assert any(entry["company"] == "Netflix" for entry in sources["lever"])
+
+
+def test_registry_contains_twenty_active_nyc_headquartered_companies() -> None:
+    nyc_companies = [
+        entry
+        for entry in load_company_registry()
+        if entry.get("headquarters") == "New York, NY"
+    ]
+
+    assert len(nyc_companies) == 20
+    assert {entry["provider"] for entry in nyc_companies} == {"greenhouse"}
+
+
+def test_registry_contains_twenty_large_company_greenhouse_entries() -> None:
+    large_companies = [
+        entry for entry in load_company_registry() if entry.get("group") == "large_company"
+    ]
+
+    assert len(large_companies) == 20
+    assert {entry["provider"] for entry in large_companies} == {"greenhouse"}

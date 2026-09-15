@@ -1,20 +1,63 @@
 # Company-first registry. Each token identifies a public ATS board, not a secret.
 companies:
+  # NYC-headquartered Greenhouse companies added September 2026.
+  - {company: Alloy, provider: greenhouse, token: alloy, headquarters: "New York, NY"}
   - {company: Airbnb, provider: greenhouse, token: airbnb}
   - {company: Asana, provider: greenhouse, token: asana}
+  - {company: Betterment, provider: greenhouse, token: betterment, headquarters: "New York, NY"}
+  - {company: Braze, provider: greenhouse, token: braze, headquarters: "New York, NY"}
+  - {company: BuzzFeed, provider: greenhouse, token: buzzfeed, headquarters: "New York, NY"}
   - {company: Cloudflare, provider: greenhouse, token: cloudflare}
   - {company: Coinbase, provider: greenhouse, token: coinbase}
   - {company: Databricks, provider: greenhouse, token: databricks}
   - {company: Datadog, provider: greenhouse, token: datadog}
+  - {company: FanDuel, provider: greenhouse, token: fanduel, headquarters: "New York, NY"}
   - {company: Figma, provider: greenhouse, token: figma}
+  - {company: Flatiron Health, provider: greenhouse, token: flatironhealth, headquarters: "New York, NY"}
   - {company: Instacart, provider: greenhouse, token: instacart}
+  - {company: LivePerson, provider: greenhouse, token: liveperson, headquarters: "New York, NY"}
   - {company: Lyft, provider: greenhouse, token: lyft}
+  - {company: Maven Clinic, provider: greenhouse, token: mavenclinic, headquarters: "New York, NY"}
   - {company: MongoDB, provider: greenhouse, token: mongodb}
   - {company: Okta, provider: greenhouse, token: okta}
+  - {company: Oscar Health, provider: greenhouse, token: oscar, headquarters: "New York, NY"}
+  - {company: Peloton, provider: greenhouse, token: peloton, headquarters: "New York, NY"}
   - {company: Pinterest, provider: greenhouse, token: pinterest}
   - {company: Reddit, provider: greenhouse, token: reddit}
+  - {company: Riskified, provider: greenhouse, token: riskified, headquarters: "New York, NY"}
   - {company: Robinhood, provider: greenhouse, token: robinhood}
+  - {company: SeatGeek, provider: greenhouse, token: seatgeek, headquarters: "New York, NY"}
+  - {company: Slice, provider: greenhouse, token: slice, headquarters: "New York, NY"}
+  - {company: Squarespace, provider: greenhouse, token: squarespace, headquarters: "New York, NY"}
   - {company: Stripe, provider: greenhouse, token: stripe}
+  - {company: Taboola, provider: greenhouse, token: taboola, headquarters: "New York, NY"}
+  - {company: TripleLift, provider: greenhouse, token: triplelift, headquarters: "New York, NY"}
   - {company: Twilio, provider: greenhouse, token: twilio}
+  - {company: VTS, provider: greenhouse, token: vts, headquarters: "New York, NY"}
+  - {company: Wunderkind, provider: greenhouse, token: wunderkind, headquarters: "New York, NY"}
+  - {company: Yext, provider: greenhouse, token: yext, headquarters: "New York, NY"}
+  - {company: Zocdoc, provider: greenhouse, token: zocdoc, headquarters: "New York, NY"}
+  # Large, recognizable technology companies added September 2026. This is a
+  # curation group, not a claim about current S&P 500 index membership.
+  - {company: Anduril, provider: greenhouse, token: andurilindustries, group: large_company}
+  - {company: Anthropic, provider: greenhouse, token: anthropic, group: large_company}
+  - {company: Checkr, provider: greenhouse, token: checkr, group: large_company}
+  - {company: Chime, provider: greenhouse, token: chime, group: large_company}
+  - {company: Discord, provider: greenhouse, token: discord, group: large_company}
+  - {company: Dropbox, provider: greenhouse, token: dropbox, group: large_company}
+  - {company: Duolingo, provider: greenhouse, token: duolingo, group: large_company}
+  - {company: Elastic, provider: greenhouse, token: elastic, group: large_company}
+  - {company: Flexport, provider: greenhouse, token: flexport, group: large_company}
+  - {company: HubSpot, provider: greenhouse, token: hubspotjobs, group: large_company}
+  - {company: Klaviyo, provider: greenhouse, token: klaviyo, group: large_company}
+  - {company: Nuro, provider: greenhouse, token: nuro, group: large_company}
+  - {company: PagerDuty, provider: greenhouse, token: pagerduty, group: large_company}
+  - {company: Samsara, provider: greenhouse, token: samsara, group: large_company}
+  - {company: SoFi, provider: greenhouse, token: sofi, group: large_company}
+  - {company: The Trade Desk, provider: greenhouse, token: thetradedesk, group: large_company}
+  - {company: Thoughtworks, provider: greenhouse, token: thoughtworks, group: large_company}
+  - {company: Toast, provider: greenhouse, token: toast, group: large_company}
+  - {company: Vercel, provider: greenhouse, token: vercel, group: large_company}
+  - {company: Webflow, provider: greenhouse, token: webflow, group: large_company}
   - {company: Netflix, provider: lever, token: netflix}
   - {company: Palantir, provider: lever, token: palantir}

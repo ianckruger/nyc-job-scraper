@@ -54,6 +54,11 @@ contains a company name, its ATS provider, and the provider's public board token
 only after confirming its board token works. The current registry has Greenhouse and Lever entries;
 the other provider adapters are planned but not yet implemented.
 
+Some entries also have a `headquarters` field. It is informational metadata for curating the
+registry; it does not replace the location-based NYC filter applied to individual job postings.
+The `group: large_company` label is likewise curation metadata, not a live S&P 500 membership
+claim.
+
 filtering modules can be found in the filtering folder, seperate from source. give ways to add to score instead of completely remove in a binary
 [SWE Filters](src/job_hunter/filters/swe.py)
 [NYC Filters](src/job_hunter/filters/nyc.py)
